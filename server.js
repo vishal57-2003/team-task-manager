@@ -13,8 +13,11 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:3000',
+    'https://beautiful-mermaid-c04474.netlify.app',
     'https://team-task-managerapp.vercel.app',
-    /\.vercel\.app$/
+    /agent-.*\.netlify\.app$/,
+    /\.vercel\.app$/,
+    /\.netlify\.app$/
   ],
   credentials: true
 }));
