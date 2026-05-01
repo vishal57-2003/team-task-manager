@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { tasksAPI, projectsAPI } from '../services/api';
 import CreateTaskModal from './CreateTaskModal';
@@ -10,26 +10,26 @@ const Tasks = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const fetchProjectAndTasks = useCallback(async () => {
-    try {
-      // Fetch project details
-      const projectsResponse = await projectsAPI.getAll();
-      const currentProject = projectsResponse.data.projects.find(p => p._id === projectId);
-      setProject(currentProject);
-
-      // Fetch tasks
-      const tasksResponse = await tasksAPI.getByProject(projectId);
-      setTasks(tasksResponse.data.tasks);
-    } catch (error) {
-      console.error('Error fetching project and tasks:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [projectId]);
-
   useEffect(() => {
+    const fetchProjectAndTasks = async () => {
+      try {
+        // Fetch project details
+        const projectsResponse = await projectsAPI.getAll();
+        const currentProject = projectsResponse.data.projects.find(p => p._id === projectId);
+        setProject(currentProject);
+
+        // Fetch tasks
+        const tasksResponse = await tasksAPI.getByProject(projectId);
+        setTasks(tasksResponse.data.tasks);
+      } catch (error) {
+        console.error('Error fetching project and tasks:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProjectAndTasks();
-  }, [fetchProjectAndTasks]);
+  }, [projectId]);
 
   const handleTaskCreated = (newTask) => {
     setTasks([newTask, ...tasks]);
