@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { tasksAPI, projectsAPI } from '../services/api';
 import CreateTaskModal from './CreateTaskModal';
@@ -10,11 +10,7 @@ const Tasks = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  useEffect(() => {
-    fetchProjectAndTasks();
-  }, [projectId]); // Add projectId as dependency
-
-  const fetchProjectAndTasks = async () => {
+  const fetchProjectAndTasks = useCallback(async () => {
     try {
       // Fetch project details
       const projectsResponse = await projectsAPI.getAll();
@@ -29,7 +25,11 @@ const Tasks = ({ user }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [projectId]);
+
+  useEffect(() => {
+    fetchProjectAndTasks();
+  }, [fetchProjectAndTasks]);
 
   const handleTaskCreated = (newTask) => {
     setTasks([newTask, ...tasks]);
