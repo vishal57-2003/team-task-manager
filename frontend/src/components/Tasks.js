@@ -12,7 +12,7 @@ const Tasks = ({ user }) => {
 
   useEffect(() => {
     fetchProjectAndTasks();
-  }, [projectId]);
+  }, [projectId]); // Add projectId as dependency
 
   const fetchProjectAndTasks = async () => {
     try {
